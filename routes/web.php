@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ListingController;
+use App\Http\Controllers\UserController;
 use App\Models\Listing;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -24,23 +25,47 @@ use Illuminate\Support\Facades\Route;
 | destroy - Delete listing
 */
 
-// all listing
+// show all listing page
 Route::get('/', [ListingController::class, 'index']);
 
-// show create form
-Route::get('/listings/create', [ListingController::class, 'create']);
+// show create listing form
+Route::get('/listings/create', [ListingController::class, 'create'])
+  ->middleware('auth');
 
 // store listing data
-Route::post('/listings', [ListingController::class, 'store']);
+Route::post('/listings', [ListingController::class, 'store'])
+  ->middleware('auth');
 
-// show edit form
-Route::get('/listings/{listing}/edit', [ListingController::class, 'edit']);
+// show edit listing form
+Route::get('/listings/{listing}/edit', [ListingController::class, 'edit'])
+  ->middleware('auth');
 
 // update listing data
-Route::put('/listings/{listing}', [ListingController::class, 'update']);
+Route::put('/listings/{listing}', [ListingController::class, 'update'])
+  ->middleware('auth');
 
 // destroy listing data
-Route::delete('/listings/{listing}', [ListingController::class, 'destroy']);
+Route::delete('/listings/{listing}', [ListingController::class, 'destroy'])
+  ->middleware('auth');
 
-// single listing
+// show single listing
 Route::get('/listings/{listing}', [ListingController::class, 'show']);
+
+// show register user form
+Route::get('/register', [UserController::class, 'create'])
+  ->middleware('guest');
+
+// store user data
+Route::post('/users', [UserController::class, 'store']);
+
+// show user login form
+Route::get('/login', [UserController::class, 'login']);
+
+// user login
+Route::post('/login', [UserController::class, 'authenticate'])
+  ->name('login')
+  ->middleware('guest');
+
+// user logout
+Route::post('/logout', [UserController::class, 'logout'])
+  ->middleware('auth');
